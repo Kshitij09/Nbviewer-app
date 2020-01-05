@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Nbviewer</string>
+    <string name="lbl_pick_file">Pick File</string>
+</resources>
