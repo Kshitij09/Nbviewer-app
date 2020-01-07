@@ -5,7 +5,7 @@ import android.net.Uri
 import android.provider.OpenableColumns
 
 fun ContentResolver.queryName(uri: Uri): String {
-    var name: String = ""
+    var name = ""
     this.query(uri, null, null, null, null)?.apply {
         val nameIndex = getColumnIndex(OpenableColumns.DISPLAY_NAME)
         moveToFirst()

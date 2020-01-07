@@ -15,28 +15,45 @@
         tools:context=".ui.main.MainFragment">
 
         <TextView
-            android:id="@+id/txt_filecontent"
-            android:layout_width="wrap_content"
+            android:id="@+id/txt_file_content"
+            android:layout_width="409dp"
             android:layout_height="wrap_content"
-            android:text="@{viewmodel.fileText}"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{viewmodel.fileContent, default=filecontent}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_filename" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btn_pick_file"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:text="@string/lbl_pick_file"
-            android:textAllCaps="false"
             android:paddingStart="32dp"
             android:paddingEnd="32dp"
+            android:text="@string/lbl_pick_file"
+            android:textAllCaps="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/txt_filename"
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@{viewmodel.filename,default=filename}"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

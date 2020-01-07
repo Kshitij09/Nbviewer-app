@@ -13,9 +13,10 @@ import com.afollestad.assent.Permission
 import com.afollestad.assent.runWithPermissions
 import com.fluentapps.nbviewer.databinding.MainFragmentBinding
 import com.fluentapps.nbviewer.utils.queryName
+import java.io.FileNotFoundException
 
 class MainFragment : Fragment() {
-
+    private val TAG = MainFragment::class.java.simpleName
     companion object {
         fun newInstance() = MainFragment()
     }
@@ -30,15 +31,15 @@ class MainFragment : Fragment() {
     ): View {
         binding = MainFragmentBinding. inflate(
             inflater, container, false).apply {
-            button.setOnClickListener { callFileIntent() }
+            btnPickFile.setOnClickListener { callFileIntent() }
         }
 
         return binding.root
     }
 
     private fun callFileIntent() = runWithPermissions(Permission.READ_EXTERNAL_STORAGE) {
+        // TODO: Filter for only .ipynb files
         val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-//            putExtra(Intent.EXTRA_MIME_TYPES, "text/plain")
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "*/*"
         }
@@ -48,7 +49,20 @@ class MainFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == FILE_PICK_REQUEST && resultCode == RESULT_OK) {
-            data?.let { Log.d("MainFragment", "Got file ${activity?.contentResolver?.queryName(data.data!!)}") }
+            data?.data?.let {
+                val filename = activity?.contentResolver?.queryName(it)
+                Log.d(TAG, "Got file $filename")
+                try {
+                    val inputStream = activity?.contentResolver?.openInputStream(it)
+                    // TODO: put reading text on background thread
+                    viewModel.updateFileContent(
+                        filename,
+                        inputStream?.reader()?.readText()
+                    )
+                } catch (e: FileNotFoundException) {
+                    Log.e(TAG, e.message)
+                }
+            }
         }
     }
 
@@ -56,6 +70,7 @@ class MainFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         binding.viewmodel = viewModel
+        binding.lifecycleOwner = this
     }
 
 }
