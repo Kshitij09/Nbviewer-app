@@ -15,27 +15,71 @@
         tools:context=".ui.main.MainFragment">
 
         <TextView
-            android:id="@+id/txt_filecontent"
+            android:id="@+id/txt_filename"
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{viewmodel.filename}"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/lbl_filename" />
+
+        <ProgressBar
+            android:id="@+id/progress_txt_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{viewmodel.fileText}"
+            android:layout_gravity="center"
+            app:goneUnless="@{viewmodel.showLoadingText}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/txt_filename" />
+
+        <TextView
+            android:id="@+id/txt_file_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:scrollbars="vertical"
+            android:text="@{viewmodel.fileContent}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            app:layout_constraintTop_toBottomOf="@+id/txt_filename"
+            tools:layout_editor_absoluteX="16dp"
+            tools:text="@string/lbl_file_content" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/btn_pick_file"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="8dp"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
             android:text="@string/lbl_pick_file"
             android:textAllCaps="false"
-            android:paddingHorizontal="32dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:goneUnless="@{!viewmodel.showLoadingText}"
+            app:constraint_referenced_ids="btn_pick_file,txt_file_content" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
