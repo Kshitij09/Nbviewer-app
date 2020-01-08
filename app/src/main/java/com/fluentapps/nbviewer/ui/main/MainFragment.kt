@@ -3,6 +3,7 @@ package com.fluentapps.nbviewer.ui.main
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.afollestad.assent.Permission
 import com.afollestad.assent.runWithPermissions
 import com.fluentapps.nbviewer.databinding.MainFragmentBinding
+import com.fluentapps.nbviewer.utils.executeAfter
 import com.fluentapps.nbviewer.utils.queryName
 import java.io.FileNotFoundException
 
@@ -32,6 +34,7 @@ class MainFragment : Fragment() {
         binding = MainFragmentBinding. inflate(
             inflater, container, false).apply {
             btnPickFile.setOnClickListener { callFileIntent() }
+            txtFileContent.movementMethod = ScrollingMovementMethod()
         }
 
         return binding.root
@@ -54,10 +57,9 @@ class MainFragment : Fragment() {
                 Log.d(TAG, "Got file $filename")
                 try {
                     val inputStream = activity?.contentResolver?.openInputStream(it)
-                    // TODO: put reading text on background thread
                     viewModel.updateFileContent(
                         filename,
-                        inputStream?.reader()?.readText()
+                        inputStream
                     )
                 } catch (e: FileNotFoundException) {
                     Log.e(TAG, e.message)
@@ -69,8 +71,9 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        binding.viewmodel = viewModel
-        binding.lifecycleOwner = this
+        binding.executeAfter {
+            viewmodel = viewModel
+            lifecycleOwner = viewLifecycleOwner
+        }
     }
-
 }

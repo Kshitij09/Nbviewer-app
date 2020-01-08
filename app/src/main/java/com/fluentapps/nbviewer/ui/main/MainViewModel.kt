@@ -3,6 +3,9 @@
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.InputStream
 
  class MainViewModel : ViewModel() {
      private val _fileContent = MutableLiveData<String>("json here")
@@ -13,8 +16,17 @@ import androidx.lifecycle.ViewModel
      val filename: LiveData<String>
          get() = _filename
 
-     fun updateFileContent(filename: String?, content: String?) {
+     private val _showLoadingText = MutableLiveData<Boolean>(false)
+     val showLoadingText: LiveData<Boolean>
+         get() = _showLoadingText
+
+     fun updateFileContent(filename: String?, inputStream: InputStream?) {
          _filename.postValue(filename)
-         _fileContent.postValue(content)
+         _showLoadingText.postValue(true)
+         GlobalScope.launch {
+             val content = inputStream?.readBytes()?.toString(Charsets.UTF_8)
+             _showLoadingText.postValue(false)
+             _fileContent.postValue(content)
+         }
      }
  }
